@@ -28,7 +28,7 @@ vocabularyRows.forEach(row => {
     // Extract audioURL
     const audioElement = row.querySelector('.vocab-list-row__audio');
     audioElement.querySelector('button').click();
-    const wordAudioURL = audioElement.querySelector('audio source');
+    const wordAudioURL = audioElement.querySelector('audio source').getAttribute('src');
 
     // Add extracted data to wordData object so far
     wordData.wordText = wordText;
