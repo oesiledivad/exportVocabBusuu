@@ -2,134 +2,80 @@
 ### Steps:
 - Go to Review page: https://www.busuu.com/dashboard#/review
 - Open browser console (Ctrl + Shift + J)
-- Copy/Paste and Run one of the following code in the browser console:
+- MUTE THE TAB
+- Copy/Paste and run the following code in the browser console:
 
 ``` javascript
-// Function to extract and export vocabulary data (supposed to be more performent)
-function extractVocabularyDataMethodOne() {
-    const vocabularyData = [];
+const vocabularyData = [];
 
-    // Select all vocabulary list rows
-    const vocabularyRows = document.querySelectorAll('.vocab-list-row');
+// Select all vocabulary list rows
+const vocabularyRows = document.querySelectorAll('.vocab-list-row');
 
-    // Loop through each vocabulary row
-    vocabularyRows.forEach(row => {
-        const wordData = {};
+// Loop through each vocabulary row
+vocabularyRows.forEach(row => {
+    const wordData = {};
 
-        // Extract word text and translation
-        const wordText = row.querySelector('.vocab-list-row__course-language .font-face-lt').textContent.trim();
-        const translation = row.querySelector('.vocab-list-row__interface-language').textContent.trim();
+    // Trigger click event to reveal audio elements
+    row.click();
 
-        // Extract strength indicator
-        const strengthIcon = row.querySelector('.vocab-strength-indicator__icon svg');
-        const strength = strengthIcon.getAttribute('fill');
-		
-        // Add extracted data to wordData object
-        wordData.wordText = wordText;
-        wordData.translation = translation;
-        wordData.strength = strength;
+    // Extract word text and translation
+    const wordText = row.querySelector('.vocab-list-row__texts .vocab-list-row__course-language .font-face-lt').textContent.trim();
+    const wordTranslation = row.querySelector('.vocab-list-row__texts .vocab-list-row__interface-language').textContent.trim();
 
-        // Check if the row has an example sentence element
-        const hasExampleSentence = row.classList.contains('vocab-list-row--keyphrase');
+    // Extract strength indicator
+    const wordStrengthText = row.querySelector('.vocab-strength-indicator__text').textContent.trim();
 
-        if (hasExampleSentence) {
-            // Extract example sentence and translation
-            const exampleSentence = row.querySelector('.vocab-list-row__keyphrase-course .font-face-lt').textContent.trim();
-            const exampleTranslation = row.querySelector('.vocab-list-row__keyphrase-interface').textContent.trim();
+    // Extract audioURL
+    const audioElement = row.querySelector('.vocab-list-row__audio');
+    audioElement.querySelector('button').click();
+    const wordAudioURL = audioElement.querySelector('.plyr__controls audio source');
 
-            // Add example sentence and translation to wordData object
-            wordData.exampleSentence = exampleSentence;
-            wordData.exampleTranslation = exampleTranslation;
-        } else {
-            // If no example sentence, set to empty string
-            wordData.exampleSentence = '';
-            wordData.exampleTranslation = '';
-        }
+    // Add extracted data to wordData object so far
+    wordData.wordText = wordText;
+    wordData.wordTranslation = wordTranslation;
+    wordData.wordStrength = wordStrengthText;
+    wordData.wordAudioURL = wordAudioURL;
 
-        // Push wordData object to vocabularyData array
-        vocabularyData.push(wordData);
-    });
+    // Extract example sentence if it exists
+    const keyphraseElement = row.querySelector('.vocab-list-row__keyphrase');
+    if (keyphraseElement) {
+        const exampleText = keyphraseElement.querySelector('.vocab-list-row__keyphrase-course .font-face-lt').textContent.trim();
+        const exampleTranslation = keyphraseElement.querySelector('.vocab-list-row__keyphrase-interface').textContent.trim();
+        const exampleAudioURL = keyphraseElement.querySelector('audio source').getAttribute('src');
 
-    // Convert vocabularyData to JSON
-    const jsonData = JSON.stringify(vocabularyData);
+        // Add example text, translation and audio to wordData object
+        wordData.exampleText = exampleText;
+        wordData.exampleTranslation = exampleTranslation;
+        wordData.exampleAudioURL = exampleAudioURL;
+    } else {
+        // If example sentence doesn't exist, set to empty string
+        wordData.exampleText = '';
+        wordData.exampleTranslation = '';
+        wordData.exampleAudioURL = '';
+    }
 
-    // Export JSON data
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'vocabulary_data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+    console.log(wordData);
 
-// Call the function to extract and export vocabulary data
-extractVocabularyDataMethodOne();
-```
-``` javascript
-// Function to extract and export vocabulary data
-function extractVocabularyDataMethodTwo() {
-    const vocabularyData = [];
+    // Push wordData object to vocabularyData array
+    vocabularyData.push(wordData);
+});
 
-    // Select all vocabulary list rows
-    const vocabularyRows = document.querySelectorAll('.vocab-list-row');
+// Convert vocabularyData to JSON
+const jsonData = JSON.stringify(vocabularyData);
 
-    // Loop through each vocabulary row
-    vocabularyRows.forEach(row => {
-        const wordData = {};
+// Export JSON data
+const blob = new Blob([jsonData], {
+    type: 'application/json'
+});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'vocabulary_data.json';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
 
-        // Extract word text and translation
-        const wordText = row.querySelector('.vocab-list-row__course-language .font-face-lt').textContent.trim();
-        const translation = row.querySelector('.vocab-list-row__interface-language').textContent.trim();
-
-        // Extract strength indicator
-        const strengthIcon = row.querySelector('.vocab-strength-indicator__icon svg');
-        const strength = strengthIcon.getAttribute('fill');
-
-        // Add extracted data to wordData object so far
-        wordData.wordText = wordText;
-        wordData.translation = translation;
-        wordData.strength = strength;
-
-        // Extract example sentence if it exists
-        const exampleSentenceElement = row.querySelector('.vocab-list-row__keyphrase-course .font-face-lt');
-        const exampleTranslationElement = row.querySelector('.vocab-list-row__keyphrase-interface');
-		
-        if (exampleSentenceElement && exampleTranslationElement) {
-            const exampleSentence = exampleSentenceElement.textContent.trim();
-            const exampleTranslation = exampleTranslationElement.textContent.trim();
-
-            // Add example sentence and translation to wordData object
-            wordData.exampleSentence = exampleSentence;
-            wordData.exampleTranslation = exampleTranslation;
-        } else {
-            // If example sentence doesn't exist, set to empty string
-            wordData.exampleSentence = '';
-            wordData.exampleTranslation = '';
-        }
-
-        // Push wordData object to vocabularyData array
-        vocabularyData.push(wordData);
-    });
-
-    // Convert vocabularyData to JSON
-    const jsonData = JSON.stringify(vocabularyData);
-
-    // Export JSON data
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'vocabulary_data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-// Call the function to extract and export vocabulary data
-extractVocabularyDataMethodTwo();
+console.log("Finished.");
 ```
 - Wait for the download
