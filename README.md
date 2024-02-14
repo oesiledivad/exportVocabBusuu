@@ -3,9 +3,9 @@
 - Go to Review page: https://www.busuu.com/dashboard#/review
 - Open browser console (Ctrl + Shift + J)
 - MUTE THE TAB
-- Copy/Paste and run the following code in the browser console:
-
+- Copy/Paste and run one of the following scripts in the browser console:
 ``` javascript
+// 1. SCRIPT: DOESN'T EXTRACT AUDIO URLS
 const vocabularyData = [];
 
 // Select all vocabulary list rows
@@ -15,8 +15,75 @@ const vocabularyRows = document.querySelectorAll('.vocab-list-row');
 vocabularyRows.forEach(row => {
     const wordData = {};
 
-    // Trigger click event to reveal audio elements
-    row.click();
+    // Extract word text and translation
+    const wordText = row.querySelector('.vocab-list-row__course-language .font-face-lt').textContent.trim();
+    const translation = row.querySelector('.vocab-list-row__interface-language').textContent.trim();
+
+    // Extract strength indicator
+    const strengthIcon = row.querySelector('.vocab-strength-indicator__icon svg');
+    const strength = strengthIcon.getAttribute('fill');
+
+    // Add extracted data to wordData object so far
+    wordData.wordText = wordText;
+    wordData.translation = translation;
+    wordData.strength = strength;
+
+    // Extract example sentence if it exists
+    const exampleSentenceElement = row.querySelector('.vocab-list-row__keyphrase-course .font-face-lt');
+    const exampleTranslationElement = row.querySelector('.vocab-list-row__keyphrase-interface');
+
+    if (exampleSentenceElement && exampleTranslationElement) {
+        const exampleSentence = exampleSentenceElement.textContent.trim();
+        const exampleTranslation = exampleTranslationElement.textContent.trim();
+
+        // Add example sentence and translation to wordData object
+        wordData.exampleSentence = exampleSentence;
+        wordData.exampleTranslation = exampleTranslation;
+    } else {
+        // If example sentence doesn't exist, set to empty string
+        wordData.exampleSentence = '';
+        wordData.exampleTranslation = '';
+    }
+
+    // Push wordData object to vocabularyData array
+    vocabularyData.push(wordData);
+});
+
+// Convert vocabularyData to JSON
+const jsonData = JSON.stringify(vocabularyData);
+
+// Export JSON data
+const blob = new Blob([jsonData], {
+    type: 'application/json'
+});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'vocabulary_data.json';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+```
+
+``` javascript
+// 2. SCRIPT: EXTRACTS AUDIO URLS TOO
+const vocabularyData = [];
+
+// Select all vocabulary list rows
+const vocabularyRows = document.querySelectorAll('.vocab-list-row');
+
+// Expand the cards and click on the audio buttons once
+vocabularyRows.forEach(row => {
+	if (!row.classList.contains('vocab-list-row--open')) {
+		row.click();
+	};
+	row.querySelector('.vocab-list-row__audio button').click();
+});
+
+// Loop through each vocabulary row
+vocabularyRows.forEach(row => {
+    const wordData = {};
 
     // Extract word text and translation
     const wordText = row.querySelector('.vocab-list-row__texts .vocab-list-row__course-language .font-face-lt').textContent.trim();
@@ -26,9 +93,7 @@ vocabularyRows.forEach(row => {
     const wordStrengthText = row.querySelector('.vocab-strength-indicator__text').textContent.trim();
 
     // Extract audioURL
-    const audioElement = row.querySelector('.vocab-list-row__audio');
-    audioElement.querySelector('button').click();
-    const wordAudioURL = audioElement.querySelector('audio source').getAttribute('src');
+    const wordAudioURL = row.querySelector('.vocab-list-row__audio audio source').getAttribute('src');
 
     // Add extracted data to wordData object so far
     wordData.wordText = wordText;
@@ -78,4 +143,5 @@ URL.revokeObjectURL(url);
 
 console.log("Finished.");
 ```
+
 - Wait for the download
