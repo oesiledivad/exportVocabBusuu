@@ -5,7 +5,7 @@
 - MUTE THE TAB
 - Copy/Paste and run one of the following scripts in the browser console:
 ``` javascript
-// 1. SCRIPT: DOESN'T EXTRACT AUDIO URLS
+// SCRIPT I (DOESN'T EXTRACT AUDIO URLS)
 const vocabularyData = [];
 
 // Select all vocabulary list rows
@@ -67,7 +67,7 @@ URL.revokeObjectURL(url);
 ```
 
 ``` javascript
-// 2. SCRIPT: EXTRACTS AUDIO URLS TOO
+// SCRIPT II (EXTRACTS AUDIO URLS TOO)
 const vocabularyData = [];
 
 // Select all vocabulary list rows
@@ -82,8 +82,11 @@ vocabularyRows.forEach(row => {
 });
 
 // Loop through each vocabulary row
-vocabularyRows.forEach(row => {
+vocabularyRows.forEach((row, index) => {
     const wordData = {};
+
+	// Save index as id
+	wordData.id = index;
 
     // Extract word text and translation
     const wordText = row.querySelector('.vocab-list-row__texts .vocab-list-row__course-language .font-face-lt').textContent.trim();
