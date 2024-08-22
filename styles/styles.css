@@ -1,0 +1,87 @@
+ body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            width: 200px;
+            height: 250px;
+            box-sizing: border-box;
+            background-color: #282A36;
+            color: #F8F8F2;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #F8F8F2;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #F8F8F2;
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .button-container {
+            text-align: center;
+            width: 100%;
+        }
+
+        .button-container button {
+            background-color: #007bff;
+            color: #F8F8F2;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-container button:active {
+            transform: scale(0.98);
+        }
+
+        .status-message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #F8F8F2;
+        }
+
+        .github-link {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .github-link svg {
+            width: 24px;
+            height: 24px;
+            fill: #F8F8F2;
+            transition: fill 0.3s;
+            padding: 10px;
+        }
+
+        .github-link a:hover svg {
+            fill: #007bff;
+        }

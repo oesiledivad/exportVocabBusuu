@@ -1,150 +1,47 @@
-## Export / Extract Vocabulary from Busuu Website in JSON
-### Steps:
-- Go to Review page: https://www.busuu.com/dashboard#/review
-- Open browser console (Ctrl + Shift + J)
-- MUTE THE TAB
-- Copy/Paste and run one of the following scripts in the browser console:
-``` javascript
-// SCRIPT I (DOESN'T EXTRACT AUDIO URLS)
-const vocabularyData = [];
+# Busuu Vocabulary
+This **Google Chrome** extension downloads word lists from [**Busuu**](https://busuu.com/) review as ".csv" spreadsheets along with all associated <ins>images</ins> and <ins>audio</ins>. The format of the downloaded data is suitable for subsequent import into [**Anki**](https://apps.ankiweb.net/). 
 
-// Select all vocabulary list rows
-const vocabularyRows = document.querySelectorAll('.vocab-list-row');
+## Downloading the Extension
+At the top of this page click `Code` and then `Download ZIP` (Note, that the `Code` button might be hidden if your browser window isn't wide enough)
+<p><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/one.png">
+  <img src="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/one.png">
+</picture></p>
 
-// Loop through each vocabulary row
-vocabularyRows.forEach(row => {
-    const wordData = {};
+## Installation
+1. [Download](https://github.com/oesiledivad/exportVocabBusuu/archive/refs/heads/main.zip) the ***exportVocabBusuu-main.zip*** archive and extract ***exportVocabBusuu-main*** folder from it. At this step, you can move the extension folder to any place in your filesystem.
+2. In *Google Chrome* click the `Extensions` button <picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/6cca563b-8149-421b-a217-0664c3b872f2"><img src="https://github.com/user-attachments/assets/89838937-f887-4aa7-bff9-9f5293fa04cb" alt="Chrome extension icon"></picture> and then <picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/bff14d50-3a4c-4b89-be0a-a739beeb111c"><img src="https://github.com/user-attachments/assets/d07bfc2b-e281-4e79-bf9f-5bc5f9c50611" alt="Manage extensions"></picture><br> 
+  <sub>(alternatively go to the Main menu <picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/f36fcb90-886f-4445-98e9-7fb5d81646e1"><img src="https://github.com/user-attachments/assets/eb8d2e95-82d3-46ae-ad96-35e6d3db159b" alt="`Menu`"></picture> in the top right corner and click `Extensions` → `Manage Extensions`)</sub>
+3. Enable `Developer mode` (top right corner of the page)<p>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/ff2313c8-a790-4dde-acb3-b538fafea92e"><img src="https://github.com/user-attachments/assets/52171083-6c1b-43cd-a5ea-17540b74265b" alt="Developer mode off->on"></picture></p>
+4. Choose `Load unpacked` (top left corner) and select the ***exportVocabBusuu-main*** folder extracted in step 1
+5. (_optional_) Click the `Extensions` button from step 2 again and pin the extension to the toolbar by clicking the pin button<p>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/two.png"><img src="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/two.png"></picture></p>
 
-    // Extract word text and translation
-    const wordText = row.querySelector('.vocab-list-row__course-language .font-face-lt').textContent.trim();
-    const translation = row.querySelector('.vocab-list-row__interface-language').textContent.trim();
+## 💡 Downloading
 
-    // Extract strength indicator
-    const strengthIcon = row.querySelector('.vocab-strength-indicator__icon svg');
-    const strength = strengthIcon.getAttribute('fill');
+>---
+>1. Make sure you are logged in on [Busuu](https://busuuu.com/)
+>2. Navigate to the ([review](https://www.busuu.com/dashboard/review/)) page
+>3. 🚩 **If you are downloading a ton of vocabulary** 🚩, make sure you have disabled the option `Ask where to save each file before downloading` in the Chrome settings (chrome://settings/downloads)
+>4. Press the extension icon and then click **ONCE** the "Start" button at the top of the menu (if you don't want the images to be downloaded, just uncheck)
+>   
+>    <p><picture>
+>       <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/three.png">
+>       <img src="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/three.png">
+>    </picture></p>
+>
+>    <sub>(if you don't see the extension icon on the toolbar, click the `Extensions` button <picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/6cca563b-8149-421b-a217-0664c3b872f2"><img src="https://github.com/user-attachments/assets/89838937-f887-4aa7-bff9-9f5293fa04cb" alt="Chrome extension icon"></picture> to locate it)</sub>
+>
+>---
 
-    // Add extracted data to wordData object so far
-    wordData.wordText = wordText;
-    wordData.translation = translation;
-    wordData.strength = strength;
+The downloaded files should appear in your Chrome downloads directory, in a subfolder with the name Busuu_$Language. The media files are start from 0, example Busuu_German_audio_0.mp3
+<p><picture>
+ <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/four.png">
+ <img src="https://raw.githubusercontent.com/Stormunblessed/IPTV-CR-NIC/main/logos/four.png">
+</picture></p>
 
-    // Extract example sentence if it exists
-    const exampleSentenceElement = row.querySelector('.vocab-list-row__keyphrase-course .font-face-lt');
-    const exampleTranslationElement = row.querySelector('.vocab-list-row__keyphrase-interface');
-
-    if (exampleSentenceElement && exampleTranslationElement) {
-        const exampleSentence = exampleSentenceElement.textContent.trim();
-        const exampleTranslation = exampleTranslationElement.textContent.trim();
-
-        // Add example sentence and translation to wordData object
-        wordData.exampleSentence = exampleSentence;
-        wordData.exampleTranslation = exampleTranslation;
-    } else {
-        // If example sentence doesn't exist, set to empty string
-        wordData.exampleSentence = '';
-        wordData.exampleTranslation = '';
-    }
-
-    // Push wordData object to vocabularyData array
-    vocabularyData.push(wordData);
-});
-
-// Convert vocabularyData to JSON
-const jsonData = JSON.stringify(vocabularyData);
-
-// Export JSON data
-const blob = new Blob([jsonData], {
-    type: 'application/json'
-});
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = 'vocabulary_data.json';
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-URL.revokeObjectURL(url);
-```
-
-``` javascript
-// SCRIPT II (EXTRACTS AUDIO URLS TOO)
-const vocabularyData = [];
-
-// Select all vocabulary list rows
-const vocabularyRows = document.querySelectorAll('.vocab-list-row');
-
-// Expand the cards and click on the audio buttons once
-vocabularyRows.forEach(row => {
-	if (!row.classList.contains('vocab-list-row--open')) {
-		row.click();
-	};
-	row.querySelector('.vocab-list-row__audio button').click();
-});
-
-// Loop through each vocabulary row
-vocabularyRows.forEach((row, index) => {
-    const wordData = {};
-
-	// Save index as id
-	wordData.id = index;
-
-    // Extract word text and translation
-    const wordText = row.querySelector('.vocab-list-row__texts .vocab-list-row__course-language .font-face-lt').textContent.trim();
-    const wordTranslation = row.querySelector('.vocab-list-row__texts .vocab-list-row__interface-language').textContent.trim();
-
-    // Extract strength indicator
-    const wordStrengthText = row.querySelector('.vocab-strength-indicator__text').textContent.trim();
-
-    // Extract audioURL
-    const wordAudioURL = row.querySelector('.vocab-list-row__audio audio source').getAttribute('src');
-
-    // Add extracted data to wordData object so far
-    wordData.wordText = wordText;
-    wordData.wordTranslation = wordTranslation;
-    wordData.wordStrength = wordStrengthText;
-    wordData.wordAudioURL = wordAudioURL;
-
-    // Extract example sentence if it exists
-    const keyphraseElement = row.querySelector('.vocab-list-row__keyphrase');
-    if (keyphraseElement) {
-        const exampleText = keyphraseElement.querySelector('.vocab-list-row__keyphrase-course .font-face-lt').textContent.trim();
-        const exampleTranslation = keyphraseElement.querySelector('.vocab-list-row__keyphrase-interface').textContent.trim();
-        const exampleAudioURL = keyphraseElement.querySelector('audio source').getAttribute('src');
-
-        // Add example text, translation and audio to wordData object
-        wordData.exampleText = exampleText;
-        wordData.exampleTranslation = exampleTranslation;
-        wordData.exampleAudioURL = exampleAudioURL;
-    } else {
-        // If example sentence doesn't exist, set to empty string
-        wordData.exampleText = '';
-        wordData.exampleTranslation = '';
-        wordData.exampleAudioURL = '';
-    }
-
-    console.log(wordData);
-
-    // Push wordData object to vocabularyData array
-    vocabularyData.push(wordData);
-});
-
-// Convert vocabularyData to JSON
-const jsonData = JSON.stringify(vocabularyData);
-
-// Export JSON data
-const blob = new Blob([jsonData], {
-    type: 'application/json'
-});
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = 'vocabulary_data.json';
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-URL.revokeObjectURL(url);
-
-console.log("Finished.");
-```
-
-- Wait for the download
+## Credits
+I was inspired by [**CourseDummp2022**](https://github.com/Eltaurus-Lt/CourseDump2022)
+<br>
+To [**joeperpetua**](https://github.com/joeperpetua/exportVocabBusuu) and [**frknltrk**](https://github.com/frknltrk/exportVocabBusuu) for the scripts
