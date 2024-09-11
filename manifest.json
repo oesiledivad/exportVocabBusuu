@@ -1,18 +1,27 @@
 {
-    "manifest_version": 3,
-    "name": "Busuu Vocabulary Downloader",
-    "version": "1.0",
-    "description": "Download Busuu vocabulary as Anki-compatible CSV + media files",
+  "manifest_version": 3,
+  "name": "Busuu Vocabulary Downloader",
+  "version": "1.1",
+  "description": "Download Busuu vocabulary as Anki-compatible CSV + media files",
+  "icons": {
+    "16": "icons/icon.png",
+    "32": "icons/icon.png",
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
+  },
   "permissions": [
     "activeTab",
     "downloads",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": "icons/icon.png"
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
   }
 }
